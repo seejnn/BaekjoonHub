@@ -149,6 +149,7 @@ async function getStats() {
 }
 
 async function getHook() {
+  console.log(getObjectFromLocalStorage('BaekjoonHub_hook'))
   return await getObjectFromLocalStorage('BaekjoonHub_hook');
 }
 
