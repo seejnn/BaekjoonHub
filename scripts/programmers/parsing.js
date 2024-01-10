@@ -26,40 +26,80 @@ function getUsername() {
 
 
 
-async function getUser() {
-  chrome.storage.local.get('BaekjoonHub_token', (data) => {
-    const token = data.BaekjoonHub_token;
-    if (token === null || token === undefined) {
-      action = true;
-    } else {
-      // To validate user, load user object from GitHub.
-      const AUTHENTICATION_URL = 'https://api.github.com/user';
+// async function getUser() {
+//   chrome.storage.local.get('BaekjoonHub_token', (data) => {
+//     const token = data.BaekjoonHub_token;
+//     if (token === null || token === undefined) {
+//       action = true;
+//     } else {
+//       // To validate user, load user object from GitHub.
+//       const AUTHENTICATION_URL = 'https://api.github.com/user';
   
-      const xhr = new XMLHttpRequest();
-      xhr.addEventListener('readystatechange', function () {
-        if (xhr.readyState === 4) {
-          if (xhr.status === 200) {
-            /* Show MAIN FEATURES */
-            const userData = JSON.parse(xhr.responseText);
-            console.log('xhr userdata', userData)
-            userId = userData.login;
-            console.log('parsing.js userId', userId)
-            return userId
-          } else if (xhr.status === 401) {
-            // bad oAuth
-            // reset token and redirect to authorization process again!
+//       const xhr = new XMLHttpRequest();
+//       xhr.addEventListener('readystatechange', function () {
+//         if (xhr.readyState === 4) {
+//           if (xhr.status === 200) {
+//             /* Show MAIN FEATURES */
+//             const userData = JSON.parse(xhr.responseText);
+//             console.log('xhr userdata', userData)
+//             userId = userData.login;
+//             console.log('parsing.js userId', userId)
+//             return userId
+//           } else if (xhr.status === 401) {
+//             // bad oAuth
+//             // reset token and redirect to authorization process again!
+//             chrome.storage.local.set({ BaekjoonHub_token: null }, () => {
+//               console.log('BAD oAuth!!! Redirecting back to oAuth process');
+//             });
+//           }
+//         }
+//       });
+//       xhr.open('GET', AUTHENTICATION_URL, true);
+//       xhr.setRequestHeader('Authorization', `token ${token}`);
+//       xhr.send();
+//     }
+//   });
+// }
+
+
+
+async function getUser() {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get('BaekjoonHub_token', async (data) => {
+      const token = data.BaekjoonHub_token;
+      if (token === null || token === undefined) {
+        resolve(null);
+      } else {
+        const AUTHENTICATION_URL = 'https://api.github.com/user';
+        try {
+          const response = await fetch(AUTHENTICATION_URL, {
+            method: 'GET',
+            headers: {
+              'Authorization': `token ${token}`
+            }
+          });
+
+          if (response.ok) {
+            const userData = await response.json();
+            console.log('xhr userdata', userData);
+            const userId = userData.login;
+            console.log('parsing.js userId', userId);
+            resolve(userId);
+          } else if (response.status === 401) {
             chrome.storage.local.set({ BaekjoonHub_token: null }, () => {
               console.log('BAD oAuth!!! Redirecting back to oAuth process');
             });
+            resolve(null);
           }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          reject(error);
         }
-      });
-      xhr.open('GET', AUTHENTICATION_URL, true);
-      xhr.setRequestHeader('Authorization', `token ${token}`);
-      xhr.send();
-    }
+      }
+    });
   });
 }
+
 
 
 
