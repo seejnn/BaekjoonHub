@@ -7,7 +7,6 @@ async function SolvedApiCall(problemId) {
 }
 
 function handleMessage(request, sender, sendResponse) {
-  console.log('handleMessage request', request);
   if (request && request.closeWebPage === true && request.isSuccess === true) {
     /* Set username */
     chrome.storage.local.set(
