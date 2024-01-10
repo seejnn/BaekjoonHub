@@ -252,7 +252,8 @@ $('#hook_button').on('click', () => {
             $('#error').show();
             $('#success').hide();
           } else {
-            linkRepo(token, `${username}/${repositoryName()}`, false);
+            // linkRepo(token, `${username}/${repositoryName()}`, false);
+            linkRepo(token, `${repositoryName()}`, false);
           }
         });
       }
