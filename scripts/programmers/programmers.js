@@ -13,7 +13,6 @@ const currentUrl = window.location.href;
 if (currentUrl.includes('/learn/courses/30') && currentUrl.includes('lessons')) startLoader();
 
 function startLoader() {
-  console.log('startLoader 시작')
   loader = setInterval(async () => {
     // 기능 Off시 작동하지 않도록 함
     const enable = await checkEnable();
@@ -21,13 +20,10 @@ function startLoader() {
     // 제출 후 채점하기 결과가 성공적으로 나왔다면 코드를 파싱하고, 업로드를 시작한다
     else if (getSolvedResult().includes('정답')) {
       log('정답이 나왔습니다. 업로드를 시작합니다.');
-      console.log('정답. 업로드 시작')
       stopLoader();
       try {
         const bojData = await parseData();
-        console.log('bojData 파싱 완료')
         await beginUpload(bojData);
-        console.log('bojData 업로드 완료')
       } catch (error) {
         log(error);
       }
@@ -48,13 +44,11 @@ function getSolvedResult() {
 /* 파싱 직후 실행되는 함수 */
 async function beginUpload(bojData) {
   log('bojData', bojData);
-  console.log('bojData', bojData)
   if (isNotEmpty(bojData)) {
     startUpload();
 
     const stats = await getStats();
     const hook = await getHook();
-    console.log('hook', hook)
 
     const currentVersion = stats.version;
     /* 버전 차이가 발생하거나, 해당 hook에 대한 데이터가 없는 경우 localstorage의 Stats 값을 업데이트하고, version을 최신으로 변경한다 */
@@ -63,11 +57,9 @@ async function beginUpload(bojData) {
     }
 
     /* 현재 제출하려는 소스코드가 기존 업로드한 내용과 같다면 중지 */
-    cachedSHA = await getStatsSHAfromPath(`${hook}/${bojData.directory}/${bojData.fileName}`)
-    console.log('cachedSHA', cachedSHA)
-    console.log('bojData', bojData)
-    calcSHA = calculateBlobSHA(bojData.code)
-    log('cachedSHA', cachedSHA, 'calcSHA', calcSHA)
+    cachedSHA = await getStatsSHAfromPath(`${hook}/${bojData.directory}/${bojData.fileName}`);
+    calcSHA = calculateBlobSHA(bojData.code);
+    log('cachedSHA', cachedSHA, 'calcSHA', calcSHA);
     if (cachedSHA == calcSHA) {
       markUploadedCSS(stats.branches, bojData.directory);
       console.log(`현재 제출번호를 업로드한 기록이 있습니다. problemIdID ${bojData.problemId}`);

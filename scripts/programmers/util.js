@@ -2,7 +2,6 @@
  * 로딩 버튼 추가
  */
 function startUpload() {
-  console.log('startUpload 시작')
   let elem = document.getElementById('BaekjoonHub_progress_anchor_element');
   if (elem !== undefined) {
     elem = document.createElement('span');
@@ -30,13 +29,11 @@ function markUploadedCSS(branches, directory) {
   uploadState.uploading = false;
   const elem = document.getElementById('BaekjoonHub_progress_elem');
   elem.className = 'markuploaded';
-  const uploadedUrl = "https://github.com/" +
-              Object.keys(branches)[0] + "/tree/" + 
-              branches[Object.keys(branches)[0]] + "/" + directory;
-  elem.addEventListener("click", function() {
+  const uploadedUrl = 'https://github.com/' + Object.keys(branches)[0] + '/tree/' + branches[Object.keys(branches)[0]] + '/' + directory;
+  elem.addEventListener('click', function () {
     window.location.href = uploadedUrl;
   });
-  elem.style.cursor = "pointer";
+  elem.style.cursor = 'pointer';
 }
 
 /**
@@ -66,6 +63,6 @@ function startUploadCountDown() {
  * @param {Date} date
  * @return {string} 포맷된 스트링
  */
-function getDateString(date){
-  return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDay()}일 ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+function getDateString(date) {
+  return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDay()}일 ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 }

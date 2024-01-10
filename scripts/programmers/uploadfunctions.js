@@ -11,8 +11,6 @@
 async function uploadOneSolveProblemOnGit(bojData, cb) {
   const token = await getToken();
   const hook = await getHook();
-  console.log('uploadfunctions.js hook', hook)
-  console.log('uploadfunctions.js bojData', bojData)
   if (isNull(token) || isNull(hook)) {
     console.error('token or hook is null', token, hook);
     return;
@@ -33,7 +31,6 @@ async function uploadOneSolveProblemOnGit(bojData, cb) {
  */
 async function upload(token, hook, sourceText, readmeText, directory, filename, commitMessage, cb) {
   /* 업로드 후 커밋 */
-  console.log('uploadfunction upload hook', hook)
   const git = new GitHub(hook, token);
   const stats = await getStats();
   let default_branch = stats.branches[hook];

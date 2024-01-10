@@ -12,19 +12,15 @@
   - code : 소스코드 내용
 */
 
-
 function getUsername() {
   chrome.storage.local.get('BaekjoonHub_token', (data) => {
     const token = data.BaekjoonHub_token;
     chrome.storage.local.get('BaekjoonHub_username', (data2) => {
       const username = data2.BaekjoonHub_username;
-      return username
+      return username;
     });
-  })
-};
-
-
-
+  });
+}
 
 // async function getUser() {
 //   chrome.storage.local.get('BaekjoonHub_token', (data) => {
@@ -34,7 +30,7 @@ function getUsername() {
 //     } else {
 //       // To validate user, load user object from GitHub.
 //       const AUTHENTICATION_URL = 'https://api.github.com/user';
-  
+
 //       const xhr = new XMLHttpRequest();
 //       xhr.addEventListener('readystatechange', function () {
 //         if (xhr.readyState === 4) {
@@ -61,8 +57,6 @@ function getUsername() {
 //   });
 // }
 
-
-
 async function getUser() {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get('BaekjoonHub_token', async (data) => {
@@ -75,15 +69,13 @@ async function getUser() {
           const response = await fetch(AUTHENTICATION_URL, {
             method: 'GET',
             headers: {
-              'Authorization': `token ${token}`
-            }
+              Authorization: `token ${token}`,
+            },
           });
 
           if (response.ok) {
             const userData = await response.json();
-            console.log('xhr userdata', userData);
             const userId = userData.login;
-            console.log('parsing.js userId', userId);
             resolve(userId);
           } else if (response.status === 401) {
             chrome.storage.local.set({ BaekjoonHub_token: null }, () => {
@@ -100,15 +92,13 @@ async function getUser() {
   });
 }
 
-
-
-
 async function parseData() {
   const username = await getUser();
-  console.log('parseData username', username)
   const link = document.querySelector('head > meta[name$=url]').content.replace(/\?.*/g, '').trim();
   const problemId = document.querySelector('div.main > div.lesson-content').getAttribute('data-lesson-id');
-  const level = levels[problemId] || 'unrated';
+
+  const level = levels[problemId] !== undefined ? levels[problemId] : 'unrated';
+
   const division = [...document.querySelector('ol.breadcrumb').childNodes]
     .filter((x) => x.className !== 'active')
     .map((x) => x.innerText)

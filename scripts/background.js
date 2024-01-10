@@ -3,11 +3,11 @@
  * @param {int} problemId
  */
 async function SolvedApiCall(problemId) {
-  return fetch(`https://solved.ac/api/v3/problem/show?problemId=${problemId}`, { method: 'GET' })
-    .then((query) => query.json());
+  return fetch(`https://solved.ac/api/v3/problem/show?problemId=${problemId}`, { method: 'GET' }).then((query) => query.json());
 }
 
 function handleMessage(request, sender, sendResponse) {
+  console.log('handleMessage request', request);
   if (request && request.closeWebPage === true && request.isSuccess === true) {
     /* Set username */
     chrome.storage.local.set(
@@ -40,7 +40,7 @@ function handleMessage(request, sender, sendResponse) {
     chrome.tabs.getSelected(null, function (tab) {
       chrome.tabs.remove(tab.id);
     });
-  } else if (request && request.sender == "baekjoon" && request.task == "SolvedApiCall") {
+  } else if (request && request.sender == 'baekjoon' && request.task == 'SolvedApiCall') {
     SolvedApiCall(request.problemId).then((res) => sendResponse(res));
     //sendResponse(SolvedApiCall(request.problemId))
   }
