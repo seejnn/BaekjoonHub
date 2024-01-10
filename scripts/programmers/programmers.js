@@ -13,6 +13,7 @@ const currentUrl = window.location.href;
 if (currentUrl.includes('/learn/courses/30') && currentUrl.includes('lessons')) startLoader();
 
 function startLoader() {
+  console.log('startLoader 시작')
   loader = setInterval(async () => {
     // 기능 Off시 작동하지 않도록 함
     const enable = await checkEnable();
@@ -20,10 +21,13 @@ function startLoader() {
     // 제출 후 채점하기 결과가 성공적으로 나왔다면 코드를 파싱하고, 업로드를 시작한다
     else if (getSolvedResult().includes('정답')) {
       log('정답이 나왔습니다. 업로드를 시작합니다.');
+      console.log('정답. 업로드 시작')
       stopLoader();
       try {
         const bojData = await parseData();
+        console.log('bojData 파싱 완료')
         await beginUpload(bojData);
+        console.log('bojData 업로드 완료')
       } catch (error) {
         log(error);
       }

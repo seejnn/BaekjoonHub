@@ -2,6 +2,7 @@
  * 로딩 버튼 추가
  */
 function startUpload() {
+  console.log('startUpload 시작')
   let elem = document.getElementById('BaekjoonHub_progress_anchor_element');
   if (elem !== undefined) {
     elem = document.createElement('span');
