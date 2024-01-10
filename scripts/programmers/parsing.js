@@ -13,7 +13,7 @@
 */
 
 
-async function getUsername() {
+function getUsername() {
   chrome.storage.local.get('BaekjoonHub_token', (data) => {
     const token = data.BaekjoonHub_token;
     chrome.storage.local.get('BaekjoonHub_username', (data2) => {
