@@ -11,8 +11,22 @@
   - readme : README.md에 작성할 내용
   - code : 소스코드 내용
 */
+
+
+async function getUsername() {
+  chrome.storage.local.get('BaekjoonHub_token', (data) => {
+    const token = data.BaekjoonHub_token;
+      chrome.storage.local.get('BaekjoonHub_username', (data2) => {
+        const username = data2.BaekjoonHub_username;
+        return username
+      });
+    }
+  });
+}
+
+
 async function parseData() {
-  const nickname = chrome.storage.local.get('nickname')
+  const username = getUsername();
   const link = document.querySelector('head > meta[name$=url]').content.replace(/\?.*/g, '').trim();
   const problemId = document.querySelector('div.main > div.lesson-content').getAttribute('data-lesson-id');
   const level = levels[problemId] || 'unrated';
@@ -38,15 +52,15 @@ async function parseData() {
     .reduce((x, y) => (Number(x[0]) > Number(y[0]) ? x : y), ['0.00ms', '0.0MB'])
     .map((x) => x.replace(/(?<=[0-9])(?=[A-Za-z])/, ' '));
 
-  return makeData({ link, problemId, level, title, problem_description, division, language_extension, code, result_message, runtime, memory });
+  return makeData({ link, problemId, level, title, problem_description, division, language_extension, code, result_message, runtime, memory, username });
 }
 
 async function makeData(origin) {
-  const { problem_description, problemId, level, result_message, division, language_extension, title, runtime, memory, code, nickname } = origin;
+  const { problem_description, problemId, level, result_message, division, language_extension, title, runtime, memory, code, username } = origin;
   const directory = `프로그래머스/${level}/${problemId}. ${convertSingleCharToDoubleChar(title)}`;
   const levelWithLv = `${level}`.includes('lv') ? level : `lv${level}`.replace('lv', 'level ');
   const message = `[${levelWithLv}] Title: ${title}, Time: ${runtime}, Memory: ${memory} -BaekjoonHub`;
-  const fileName = `${nickname}-${convertSingleCharToDoubleChar(title)}.${language_extension}`;
+  const fileName = `${username}-${convertSingleCharToDoubleChar(title)}.${language_extension}`;
   const dateInfo = getDateString(new Date(Date.now()));
   // prettier-ignore
   const readme =
