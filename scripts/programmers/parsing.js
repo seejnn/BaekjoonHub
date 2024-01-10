@@ -12,6 +12,7 @@
   - code : 소스코드 내용
 */
 async function parseData() {
+  const nickname = chrome.storage.local.get('nickname')
   const link = document.querySelector('head > meta[name$=url]').content.replace(/\?.*/g, '').trim();
   const problemId = document.querySelector('div.main > div.lesson-content').getAttribute('data-lesson-id');
   const level = levels[problemId] || 'unrated';
@@ -41,8 +42,7 @@ async function parseData() {
 }
 
 async function makeData(origin) {
-  const nickname = chrome.storage.local.get('nickname')
-  const { problem_description, problemId, level, result_message, division, language_extension, title, runtime, memory, code } = origin;
+  const { problem_description, problemId, level, result_message, division, language_extension, title, runtime, memory, code, nickname } = origin;
   const directory = `프로그래머스/${level}/${problemId}. ${convertSingleCharToDoubleChar(title)}`;
   const levelWithLv = `${level}`.includes('lv') ? level : `lv${level}`.replace('lv', 'level ');
   const message = `[${levelWithLv}] Title: ${title}, Time: ${runtime}, Memory: ${memory} -BaekjoonHub`;
