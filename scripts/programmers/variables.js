@@ -60,7 +60,7 @@ function fetchAllPages() {
         fetchAllPages();
       } else {
         // 모든 페이지를 순회한 후에 levels 딕셔너리 출력
-        console.log('Levels 딕셔너리:', levels);
+        // console.log('Levels 딕셔너리:', levels);
       }
     })
     .catch((error) => {
