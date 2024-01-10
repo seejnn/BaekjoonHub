@@ -25,8 +25,45 @@ function getUsername() {
 
 
 
+
+function getUser() {
+  chrome.storage.local.get('BaekjoonHub_token', (data) => {
+    const token = data.BaekjoonHub_token;
+    if (token === null || token === undefined) {
+      action = true;
+    } else {
+      // To validate user, load user object from GitHub.
+      const AUTHENTICATION_URL = 'https://api.github.com/user';
+  
+      const xhr = new XMLHttpRequest();
+      xhr.addEventListener('readystatechange', function () {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            /* Show MAIN FEATURES */
+            const userData = JSON.parse(xhr.responseText);
+            console.log('xhr userdata', userData)
+            userId = userData.login;
+            return userId = userData.login;
+          } else if (xhr.status === 401) {
+            // bad oAuth
+            // reset token and redirect to authorization process again!
+            chrome.storage.local.set({ BaekjoonHub_token: null }, () => {
+              console.log('BAD oAuth!!! Redirecting back to oAuth process');
+            });
+          }
+        }
+      });
+      xhr.open('GET', AUTHENTICATION_URL, true);
+      xhr.setRequestHeader('Authorization', `token ${token}`);
+      xhr.send();
+    }
+  });
+}
+
+
+
 async function parseData() {
-  const username = getUsername();
+  const username = getUser();
   const link = document.querySelector('head > meta[name$=url]').content.replace(/\?.*/g, '').trim();
   const problemId = document.querySelector('div.main > div.lesson-content').getAttribute('data-lesson-id');
   const level = levels[problemId] || 'unrated';
