@@ -26,7 +26,7 @@ function getUsername() {
 
 
 
-function getUser() {
+async function getUser() {
   chrome.storage.local.get('BaekjoonHub_token', (data) => {
     const token = data.BaekjoonHub_token;
     if (token === null || token === undefined) {
@@ -43,7 +43,8 @@ function getUser() {
             const userData = JSON.parse(xhr.responseText);
             console.log('xhr userdata', userData)
             userId = userData.login;
-            return userId = userData.login;
+            console.log('parsing.js userId', userId)
+            return userId
           } else if (xhr.status === 401) {
             // bad oAuth
             // reset token and redirect to authorization process again!
@@ -63,7 +64,8 @@ function getUser() {
 
 
 async function parseData() {
-  const username = getUser();
+  const username = await getUser();
+  console.log('parseData username', username)
   const link = document.querySelector('head > meta[name$=url]').content.replace(/\?.*/g, '').trim();
   const problemId = document.querySelector('div.main > div.lesson-content').getAttribute('data-lesson-id');
   const level = levels[problemId] || 'unrated';
