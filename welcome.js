@@ -81,6 +81,8 @@ const createRepo = (token, name) => {
   stats.version = chrome.runtime.getManifest().version;
   stats.submission = {};
   chrome.storage.local.set({ stats });
+  const nickname = document.querySelector('#nickname').value
+  chorme.storage.local.set({ nickname })
 
   xhr.open('POST', AUTHENTICATION_URL, true);
   xhr.setRequestHeader('Authorization', `token ${token}`);
