@@ -16,13 +16,13 @@
 async function getUsername() {
   chrome.storage.local.get('BaekjoonHub_token', (data) => {
     const token = data.BaekjoonHub_token;
-      chrome.storage.local.get('BaekjoonHub_username', (data2) => {
-        const username = data2.BaekjoonHub_username;
-        return username
-      });
-    }
-  });
-}
+    chrome.storage.local.get('BaekjoonHub_username', (data2) => {
+      const username = data2.BaekjoonHub_username;
+      return username
+    });
+  })
+};
+
 
 
 async function parseData() {
